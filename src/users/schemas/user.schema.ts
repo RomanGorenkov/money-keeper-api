@@ -13,4 +13,12 @@ export const UserSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  language: {
+    type: String,
+    required: false,
+  },
+  currencyName: {
+    type: String,
+    required: false,
+  },
 });

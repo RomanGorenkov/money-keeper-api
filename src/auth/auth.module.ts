@@ -8,14 +8,16 @@ import { JwtModule } from '@nestjs/jwt';
 import { jwtConstants } from './constants/constants';
 import { AuthController } from './controllers/auth.controller';
 import { HashService } from '../users/services/hash/hash.service';
+import { CostsModule } from '../costs/costs.module';
 
 @Module({
   imports: [
     UsersModule,
+    CostsModule,
     PassportModule,
     JwtModule.register({
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '360m' },
     }),
   ],
   providers: [

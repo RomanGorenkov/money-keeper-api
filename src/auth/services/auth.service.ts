@@ -3,11 +3,13 @@ import { UsersService } from '../../users/services/users.service';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { User } from '../../users/interfaces/user.interface';
+import { CostService } from '../../costs/services/cost/cost.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
+    private readonly costService: CostService,
     private readonly jwtService: JwtService,
   ) {
   }
@@ -32,8 +34,12 @@ export class AuthService {
   async login(userDatabaseResponse: User) {
     const userData = userDatabaseResponse;
     const payload = { username: userData.username, sub: userData._id };
+    const userPresets = await this.usersService.getUserPreset(userData._id);
+    const userCosts = await this.costService.getAllUserCosts(userData._id);
     return {
       access_token: this.jwtService.sign(payload),
+      userPresets,
+      userCosts,
     };
   }
 }

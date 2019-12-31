@@ -4,6 +4,7 @@ import { Model } from 'mongoose';
 import { CreateUserDto } from '../dto/create-user.dto';
 import { HashService } from './hash/hash.service';
 import { User } from '../interfaces/user.interface';
+import { UserPreset } from '../interfaces/user-preset.interfase';
 
 @Injectable()
 export class UsersService {
@@ -28,10 +29,12 @@ export class UsersService {
     return await this.usersModel.findOne({ email });
   }
 
+  async getUserById(id: string): Promise<User> {
+    return await this.usersModel.findById(id);
+  }
+
   async checkUser(email: string, password: string) {
-    console.log(email);
     const user: User = await this.getUserByEmail(email);
-    console.log(user);
     const compere = await this.hashService.compareHash(password, user.password);
     if (user && compere) {
       const { password, ...result } = Object(user)._doc;
@@ -39,4 +42,36 @@ export class UsersService {
     }
     return null;
   }
+
+  async changeUserLanguage(language: string, _id: string) {
+    await this.usersModel.updateOne({_id}, {
+      language,
+    });
+  }
+
+  async getUserLanguage(id: string) {
+    const user: User = await this.getUserById(id);
+    return user.language;
+  }
+
+  async changeUserCurrency(currency: string, _id: string) {
+    await this.usersModel.updateOne({_id}, {
+      currencyName: currency,
+    });
+  }
+
+  async getUserCurrency(id: string) {
+    const user: User = await this.getUserById(id);
+    return user.currencyName;
+  }
+
+  async getUserPreset(id: string) {
+    const user: User = await this.getUserById(id);
+    const preset: UserPreset = {
+      language: user.language,
+      currencyName: user.currencyName,
+    };
+    return preset;
+  }
+
 }
