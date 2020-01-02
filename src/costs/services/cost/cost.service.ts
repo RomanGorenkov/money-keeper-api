@@ -14,10 +14,10 @@ export class CostService {
   ) {
   }
 
-  async addCost(costData: CreateCostsDto, userId: string): Promise<string> {
+  async addCost(costData: CreateCostsDto, userId: string): Promise<UserCosts[]> {
     const newCost = await this.costsModel({ userId, ...costData });
-    newCost.save();
-    return 'Cost has been submitted successfully!';
+    await newCost.save();
+    return await this.getAllUserCosts(userId);
   }
 
   async getUserCategoryCost(categoryName: string, userId: string, startDate: number, endDate: number): Promise<CreateCostsDto[]> {
@@ -30,7 +30,7 @@ export class CostService {
     return costList;
   }
 
-  async getAllUserCosts(userId: string, startDate: number = this.getTodayDate(), endDate: number = this.getTomorrowDate()) {
+  async getAllUserCosts(userId: string, startDate: number = 0, endDate: number = this.getTomorrowDate()) {
     const allCostsList: UserCosts[] = await this.costsModel.aggregate(
       [
         {
