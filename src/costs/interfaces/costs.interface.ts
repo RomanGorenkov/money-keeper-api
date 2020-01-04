@@ -4,4 +4,5 @@ export interface Costs {
   readonly costDescription: string;
   costValue: string;
   readonly costDate: number;
+  readonly costColor: string;
 }
