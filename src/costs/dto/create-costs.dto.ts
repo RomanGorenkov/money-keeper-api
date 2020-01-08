@@ -5,7 +5,7 @@ export class CreateCostsDto {
   @IsNotEmpty()
   @MinLength(6)
   readonly costDescription: string;
-  @IsNumberString()
+  @IsNumber()
   readonly costValue: number;
   @IsNumber()
   readonly costDate: number;

@@ -14,8 +14,8 @@ export class CostsController {
   @UseGuards(AuthGuard('jwt'))
   @Post('add')
   async addCost(@Request() req, @Res() res, @Body() createCostDto: CreateCostsDto) {
-    const allUserCosts = await this.costsService.addCost(createCostDto, req.user.userId);
-    return res.status(HttpStatus.OK).json(allUserCosts);
+    await this.costsService.addCost(createCostDto, req.user.userId);
+    return res.status(HttpStatus.OK).json();
   }
 
   @UseGuards(AuthGuard('jwt'))
@@ -47,6 +47,16 @@ export class CostsController {
     @Param('endDate') endDate: string,
   ) {
     const costList = await this.costsService.getAllUserCosts(req.user.userId, parseInt(startDate, 10), parseInt(endDate, 10));
+    return res.status(HttpStatus.OK).json(costList);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('all-categories')
+  async getTodayAllUserCosts(
+    @Request() req,
+    @Res() res,
+  ) {
+    const costList = await this.costsService.getAllUserCosts(req.user.userId);
     return res.status(HttpStatus.OK).json(costList);
   }
 
