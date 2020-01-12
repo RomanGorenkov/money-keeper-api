@@ -5,6 +5,8 @@ import { CreateUserDto } from '../dto/create-user.dto';
 import { HashService } from './hash/hash.service';
 import { User } from '../interfaces/user.interface';
 import { UserPreset } from '../interfaces/user-preset.interfase';
+import { UserSettings } from '../interfaces/user-settings.interface';
+import { CloudinaryService } from './cloudinary/cloudinary.service';
 
 @Injectable()
 export class UsersService {
@@ -12,6 +14,7 @@ export class UsersService {
   constructor(
     @InjectModel('Users') private readonly usersModel: Model<User>,
     private hashService: HashService,
+    private cloudinaryService: CloudinaryService,
   ) {
   }
 
@@ -72,6 +75,26 @@ export class UsersService {
       currencyName: user.currencyName,
     };
     return preset;
+  }
+
+  async getUserSettings(id: string) {
+    const user: User = await this.getUserById(id);
+    const settings: UserSettings = {
+      username: user.username,
+      userAvatarUrl: user.userAvatarUrl,
+    };
+    return settings;
+  }
+
+  async setUserSettings(id: string, settings: UserSettings, avatarFile) {
+    const filter = {
+      _id: id,
+    };
+    if (avatarFile) {
+      await this.cloudinaryService.uploadImg(id, avatarFile);
+    }
+    await this.usersModel.findOneAndUpdate(filter , settings);
+    return await this.getUserSettings(id);
   }
 
 }
