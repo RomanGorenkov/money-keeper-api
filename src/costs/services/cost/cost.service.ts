@@ -5,21 +5,13 @@ import { Costs } from '../../interfaces/costs.interface';
 import { CreateCostsDto } from '../../dto/create-costs.dto';
 import { UserCosts } from '../../interfaces/user-costs.interface';
 import { dateTimeInterval } from '../../constants/date-time-interval';
-import { CreateCostCategoryDto } from '../../dto/create-cost-category.dto';
-import { CostCategory } from '../../interfaces/cost-category.interface';
 
 @Injectable()
 export class CostService {
 
   constructor(
     @InjectModel('Costs') private readonly costsModel: Model<Costs>,
-    @InjectModel('CostCategories') private readonly costCategoriesModel: Model<CostCategory>,
   ) {
-  }
-
-  async addCostCategory(costCategoryData: CreateCostCategoryDto, userId: string) {
-    const newCostCategory = await this.costCategoriesModel({ userId, ...costCategoryData });
-    await newCostCategory.save();
   }
 
   async addCost(costData: CreateCostsDto, userId: string) {
@@ -58,6 +50,7 @@ export class CostService {
                   costValue: '$costValue',
                   costDescription: '$costDescription',
                   costColor: '$costColor',
+                  costLocalizationKey: '$costLocalizationKey',
                 },
               },
 
