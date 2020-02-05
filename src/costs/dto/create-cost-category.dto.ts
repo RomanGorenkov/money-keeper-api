@@ -2,9 +2,7 @@ import { IsNotEmpty } from 'class-validator';
 
 export class CreateCostCategoryDto {
   @IsNotEmpty()
-  readonly categoryName: string;
+  name: string;
   @IsNotEmpty()
-  readonly categoryColor?: string;
-  @IsNotEmpty()
-  readonly categoryUrl?: string;
+  readonly color?: string;
 }

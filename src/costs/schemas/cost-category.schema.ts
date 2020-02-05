@@ -5,15 +5,15 @@ export const CostCategorySchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  categoryName:  {
+  name:  {
     type: String,
     required: true,
   },
-  categoryColor: {
+  color: {
     type: String,
     required: false,
   },
-  categoryUrl: {
+  imageUrl: {
     type: String,
     required: true,
   },

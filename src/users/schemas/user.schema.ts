@@ -21,4 +21,8 @@ export const UserSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  userAvatarUrl: {
+    type: String,
+    required: false,
+  },
 });

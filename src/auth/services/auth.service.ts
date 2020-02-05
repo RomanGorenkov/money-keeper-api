@@ -4,12 +4,14 @@ import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto } from '../../users/dto/create-user.dto';
 import { User } from '../../users/interfaces/user.interface';
 import { CostService } from '../../costs/services/cost/cost.service';
+import { CostCategoryService } from '../../costs/services/cost-category/cost-category.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly costService: CostService,
+    private readonly costCategoryService: CostCategoryService,
     private readonly jwtService: JwtService,
   ) {
   }
@@ -22,24 +24,19 @@ export class AuthService {
     return await this.usersService.checkUser(email, password);
   }
 
-  // async validateUser(username: string, pass: string): Promise<any> {
-  //   const user = await this.usersService.findOne(username);
-  //   if (user && user.password === pass) {
-  //     const { password, ...result } = user;
-  //     return result;
-  //   }
-  //   return null;
-  // }
-
   async login(userDatabaseResponse: User) {
     const userData = userDatabaseResponse;
     const payload = { username: userData.username, sub: userData._id };
     const userPresets = await this.usersService.getUserPreset(userData._id);
     const userCosts = await this.costService.getAllUserCosts(userData._id);
+    const userSettings = await this.usersService.getUserSettings(userData._id);
+    const customCategoryList = await this.costCategoryService.getCustomUserCategoryList(userData._id);
     return {
       access_token: this.jwtService.sign(payload),
       userPresets,
       userCosts,
+      userSettings,
+      customCategoryList,
     };
   }
 }

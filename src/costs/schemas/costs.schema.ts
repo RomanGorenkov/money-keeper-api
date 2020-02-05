@@ -21,4 +21,8 @@ export const CostSchema = new mongoose.Schema({
     type: Number,
     required: true,
   },
+  costLocalizationKey: {
+    type: String,
+    required: false,
+  },
 });

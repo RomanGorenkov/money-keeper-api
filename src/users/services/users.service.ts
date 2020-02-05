@@ -6,7 +6,7 @@ import { HashService } from './hash/hash.service';
 import { User } from '../interfaces/user.interface';
 import { UserPreset } from '../interfaces/user-preset.interfase';
 import { UserSettings } from '../interfaces/user-settings.interface';
-import { CloudinaryService } from './cloudinary/cloudinary.service';
+import { CloudinaryService } from '../../shared/services/cloudinary/cloudinary.service';
 
 @Injectable()
 export class UsersService {
@@ -91,7 +91,11 @@ export class UsersService {
       _id: id,
     };
     if (avatarFile) {
-      await this.cloudinaryService.uploadImg(id, avatarFile);
+      const userAvatarUrl = await this.cloudinaryService.uploadImg(avatarFile);
+      console.log(userAvatarUrl);
+      await this.usersModel.findOneAndUpdate(filter, {
+        userAvatarUrl,
+        });
     }
     await this.usersModel.findOneAndUpdate(filter , settings);
     return await this.getUserSettings(id);
